@@ -300,19 +300,12 @@
   </style>
 </head>
 <body>
-
-<!-- Formulario oculto para que Netlify lo detecte al hacer deploy -->
-<form name="contacto" method="POST" data-netlify="true" hidden>
-  <input type="text" name="nombre" />
-  <input type="email" name="email" />
-  <textarea name="mensaje"></textarea>
-</form>
  
 <div class="layout">
  
   <aside>
     <div class="sidebar-top">
-      <div class="site-name">tu nombre</div>
+      <div class="site-name">mateo pereyra</div>
       <button class="menu-toggle" onclick="toggleMenu()" aria-label="Abrir menú">
         <span></span><span></span><span></span>
       </button>
@@ -388,16 +381,17 @@
     setActiveBtn(null);
     closeMenu();
 
-    document.getElementById('mainInner').innerHTML = `
-      <div class="contact-label">contacto</div>
-      <p class="contact-intro">Si querés escribirme, dejá tu mensaje acá.</p>
-      <form onsubmit="handleSubmit(event)">
-        <input class="contact-field" type="text" placeholder="nombre" required />
-        <input class="contact-field" type="email" placeholder="email" required />
-        <textarea class="contact-field" placeholder="mensaje" required></textarea>
-        <button class="submit-btn" type="submit">enviar →</button>
-      </form>
-    `;
+  document.getElementById('mainInner').innerHTML = `
+  <div class="contact-label">contacto</div>
+  <p class="contact-intro">Si querés escribirme, dejá tu mensaje acá.</p>
+  <form name="contacto" method="POST" data-netlify="true" action="/gracias.html">
+    <input type="hidden" name="form-name" value="contacto" />
+    <input class="contact-field" type="text" name="nombre" placeholder="nombre" required />
+    <input class="contact-field" type="email" name="email" placeholder="email" required />
+    <textarea class="contact-field" name="mensaje" placeholder="mensaje" required></textarea>
+    <button class="submit-btn" type="submit">enviar →</button>
+  </form>
+`;
   }
 
   function handleSubmit(e) {
