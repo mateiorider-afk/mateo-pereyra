@@ -258,6 +258,7 @@
     /* ── Mobile ── */
     .menu-toggle {
       display: none;
+
     }
 
     @media (max-width: 600px) {
@@ -505,11 +506,18 @@
     function toggleMenu() {
       document.getElementById('notesList').classList.toggle('open');
       document.getElementById('sidebarFooter').classList.toggle('open');
+      const mainInner = document.getElementById('mainInner');
+      if (document.getElementById('notesList').classList.contains('open')) {
+        mainInner.style.display = 'none';
+      } else {
+        mainInner.style.display = '';
+      }
     }
 
     function closeMenu() {
       document.getElementById('notesList').classList.remove('open');
       document.getElementById('sidebarFooter').classList.remove('open');
+      document.getElementById('mainInner').style.display = '';
     }
 
     // Inicia: renderiza la lista y carga la primera nota
