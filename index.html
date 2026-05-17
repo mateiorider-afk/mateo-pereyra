@@ -301,29 +301,36 @@
 </head>
 <body>
 
+<!-- Formulario oculto para que Netlify lo detecte al hacer deploy -->
+<form name="contacto" data-netlify="true" hidden>
+  <input type="text" name="nombre" />
+  <input type="email" name="email" />
+  <textarea name="mensaje"></textarea>
+</form>
+ 
 <div class="layout">
-
+ 
   <aside>
     <div class="sidebar-top">
-      <div class="site-name">mateo pereyra</div>
+      <div class="site-name">tu nombre</div>
       <button class="menu-toggle" onclick="toggleMenu()" aria-label="Abrir menú">
         <span></span><span></span><span></span>
       </button>
     </div>
-
+ 
     <nav class="notes-list" id="notesList" aria-label="Notas"></nav>
-
+ 
     <div class="sidebar-footer" id="sidebarFooter">
       <button class="contact-btn" onclick="showContact()">contacto</button>
     </div>
   </aside>
-
+ 
   <main>
     <div class="main-inner" id="mainInner">
       <!-- El contenido se carga acá dinámicamente -->
     </div>
   </main>
-
+ 
 </div>
 
 <script>
