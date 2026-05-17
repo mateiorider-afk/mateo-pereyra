@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mateo pereyra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sidebar-width: 220px;
+      --font-display: 'EB Garamond', Georgia, serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      font-family: var(--font-body);
+      background: #fff;
+      color: #000;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    aside {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      border-right: 1px solid #ebebeb;
+      display: flex;
+      flex-direction: column;
+      padding: 40px 0;
+      overflow-y: auto;
+    }
+
+    .site-name {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 400;
+      color: #000;
+      padding: 0 28px 32px;
+      letter-spacing: 0.01em;
+    }
+
+    .notes-list { flex: 1; }
+
+    .note-item {
+      display: block;
+      padding: 9px 28px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+
+    .note-item:hover .note-title,
+    .note-item.active .note-title { color: #000; }
+
+    .note-date {
+      font-size: 10px;
+      color: #bbb;
+      margin-bottom: 2px;
+      letter-spacing: 0.04em;
+    }
+
+    .note-title {
+      font-family: var(--font-display);
+      font-size: 14px;
+      color: #999;
+      line-height: 1.4;
+      transition: color 0.15s;
+    }
+
+    .note-item.active .note-date { color: #777; }
+
+    .sidebar-footer { padding: 24px 28px 0; }
+
+    .contact-btn {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 300;
+      color: #000;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .contact-btn:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* ── Main ── */
+    main {
+      flex: 1;
+      min-width: 0;
+      padding: 48px 60px 80px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .main-inner {
+      width: 100%;
+      max-width: 620px;
+    }
+
+    /* ── Estilos de las notas (se aplican al HTML cargado dinámicamente) ── */
+    .entry-date {
+      font-size: 11px;
+      color: #bbb;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+
+    .entry-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 400;
+      color: #000;
+      line-height: 1.25;
+      margin-bottom: 28px;
+    }
+
+    .entry-photo {
+      width: 100%;
+      aspect-ratio: 3/2;
+      background: #f4f4f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .entry-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-placeholder {
+      font-size: 12px;
+      color: #ccc;
+      font-family: var(--font-body);
+      font-weight: 300;
+    }
+
+    .entry-body {
+      font-family: var(--font-display);
+      font-size: 17px;
+      color: #222;
+      line-height: 1.85;
+    }
+
+    /* ── Estado de carga ── */
+    .loading {
+      font-size: 13px;
+      color: #ccc;
+      font-family: var(--font-body);
+      font-weight: 300;
+    }
+
+    /* ── Contacto ── */
+    .contact-label {
+      font-size: 11px;
+      color: #bbb;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+
+    .contact-intro {
+      font-family: var(--font-display);
+      font-size: 17px;
+      color: #333;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    .contact-field {
+      display: block;
+      width: 100%;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 300;
+      color: #000;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 10px 0;
+      margin-bottom: 20px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .contact-field:focus { border-bottom-color: #000; }
+    .contact-field::placeholder { color: #ccc; }
+
+    textarea.contact-field {
+      height: 80px;
+      resize: none;
+    }
+
+    .submit-btn {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 300;
+      color: #000;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .submit-btn:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* ── Mobile ── */
+    .menu-toggle { display: none; }
+
+    @media (max-width: 600px) {
+      .layout { flex-direction: column; }
+
+      aside {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid #ebebeb;
+        padding: 0;
+      }
+
+      .sidebar-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
+      }
+
+      .site-name { padding: 0; }
+
+      .menu-toggle {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+      }
+
+      .menu-toggle span {
+        display: block;
+        width: 20px;
+        height: 1px;
+        background: #000;
+      }
+
+      .notes-list {
+        display: none;
+        border-top: 1px solid #ebebeb;
+        padding: 8px 0;
+      }
+
+      .notes-list.open { display: block; }
+
+      .sidebar-footer {
+        display: none;
+        padding: 12px 24px 20px;
+        border-top: 1px solid #ebebeb;
+      }
+
+      .sidebar-footer.open { display: block; }
+
+      main {
+        padding: 28px 24px 60px;
+        justify-content: flex-start;
+      }
+
+      .entry-title { font-size: 22px; }
+    }
+
+    @media (min-width: 601px) {
+      .sidebar-top { display: contents; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <aside>
+    <div class="sidebar-top">
+      <div class="site-name">mateo pereyra</div>
+      <button class="menu-toggle" onclick="toggleMenu()" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <nav class="notes-list" id="notesList" aria-label="Notas"></nav>
+
+    <div class="sidebar-footer" id="sidebarFooter">
+      <button class="contact-btn" onclick="showContact()">contacto</button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="main-inner" id="mainInner">
+      <!-- El contenido se carga acá dinámicamente -->
+    </div>
+  </main>
+
+</div>
+
+<script>
+  // ─────────────────────────────────────────────
+  // LISTA DE NOTAS
+  // Para agregar una nota nueva:
+  //   1. Creá el archivo en la carpeta notas/
+  //   2. Agregá un objeto a este array (al principio = más reciente primero)
+  // Para eliminar una nota: borrá la línea y el archivo.
+  // ─────────────────────────────────────────────
+  const notes = [
+    { date: 'Mayo 2025',    title: 'Ill be the driver', file: 'Notas/nota2.html'  },
+  { date: 'Diciembre 2025',    title: 'Estrellas y una idea',  file: 'Notas/nota1.html'  },
+    { date: 'Agosto 2025', title: 'Servite',    file: 'Notas/nota3.html'       },
+  ];
+
+  let activeBtn = null;
+
+  // Renderiza la lista en la sidebar
+  function renderList() {
+    document.getElementById('notesList').innerHTML = notes.map((n, i) => `
+      <button class="note-item ${i === 0 ? 'active' : ''}"
+              onclick="loadNote('${n.file}', this)"
+              aria-label="Ver nota: ${n.title}">
+        <div class="note-date">${n.date}</div>
+        <div class="note-title">${n.title}</div>
+      </button>
+    `).join('');
+    activeBtn = document.querySelector('.note-item');
+  }
+
+  // Carga el archivo HTML de la nota y lo muestra en el main
+  function loadNote(file, btn) {
+    setActiveBtn(btn);
+    closeMenu();
+
+    const container = document.getElementById('mainInner');
+    container.innerHTML = '<p class="loading">cargando...</p>';
+
+    fetch(file)
+      .then(res => {
+        if (!res.ok) throw new Error('No se pudo cargar la nota');
+        return res.text();
+      })
+      .then(html => {
+        container.innerHTML = html;
+      })
+      .catch(() => {
+        container.innerHTML = '<p class="loading">no se pudo cargar la nota.</p>';
+      });
+  }
+
+  // Muestra el formulario de contacto
+  function showContact() {
+    setActiveBtn(null);
+    closeMenu();
+
+    document.getElementById('mainInner').innerHTML = `
+      <div class="contact-label">contacto</div>
+      <p class="contact-intro">Si querés escribirme, dejá tu mensaje acá.</p>
+      <form onsubmit="handleSubmit(event)">
+        <input class="contact-field" type="text" placeholder="nombre" required />
+        <input class="contact-field" type="email" placeholder="email" required />
+        <textarea class="contact-field" placeholder="mensaje" required></textarea>
+        <button class="submit-btn" type="submit">enviar →</button>
+      </form>
+    `;
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    e.target.innerHTML = '<p style="font-family: var(--font-display); font-size:17px; color:#555;">Mensaje enviado. Gracias.</p>';
+  }
+
+  function setActiveBtn(btn) {
+    document.querySelectorAll('.note-item').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    activeBtn = btn;
+  }
+
+  function toggleMenu() {
+    document.getElementById('notesList').classList.toggle('open');
+    document.getElementById('sidebarFooter').classList.toggle('open');
+  }
+
+  function closeMenu() {
+    document.getElementById('notesList').classList.remove('open');
+    document.getElementById('sidebarFooter').classList.remove('open');
+  }
+
+  // Inicia: renderiza la lista y carga la primera nota
+  renderList();
+  loadNote(notes[0].file, document.querySelector('.note-item'));
+</script>
+
+</body>
+</html>
