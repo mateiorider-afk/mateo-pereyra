@@ -300,12 +300,19 @@
   </style>
 </head>
 <body>
+
+<!-- Formulario oculto para que Netlify lo detecte al hacer deploy -->
+<form name="contacto" data-netlify="true" hidden>
+  <input type="text" name="nombre" />
+  <input type="email" name="email" />
+  <textarea name="mensaje"></textarea>
+</form>
  
 <div class="layout">
  
   <aside>
     <div class="sidebar-top">
-      <div class="site-name">mateo pereyra</div>
+      <div class="site-name">tu nombre</div>
       <button class="menu-toggle" onclick="toggleMenu()" aria-label="Abrir menú">
         <span></span><span></span><span></span>
       </button>
@@ -381,10 +388,10 @@
     setActiveBtn(null);
     closeMenu();
 
-  document.getElementById('mainInner').innerHTML = `
+    document.getElementById('mainInner').innerHTML = `
   <div class="contact-label">contacto</div>
   <p class="contact-intro">Si querés escribirme, dejá tu mensaje acá.</p>
-  <form name="contacto" method="POST" data-netlify="true" action="https://mateopereyra.com/gracias.html">
+  <form id="formContacto">
     <input type="hidden" name="form-name" value="contacto" />
     <input class="contact-field" type="text" name="nombre" placeholder="nombre" required />
     <input class="contact-field" type="email" name="email" placeholder="email" required />
@@ -392,6 +399,19 @@
     <button class="submit-btn" type="submit">enviar →</button>
   </form>
 `;
+
+document.getElementById('formContacto').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const data = new FormData(form);
+  fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(data).toString()
+  })
+  .then(() => { window.location.href = '/gracias.html'; })
+  .catch(() => { window.location.href = '/gracias.html'; });
+});
   }
 
   function handleSubmit(e) {
